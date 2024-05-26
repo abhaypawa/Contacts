@@ -3,10 +3,10 @@ import { Link, useParams } from "react-router-dom";
 import { ContactService } from "../../../services/Contactservice";
 import Spinner from "../../spinner/spinner";
 
-let ViewContact = () => {
+const ViewContact = () => {
     let { contactId } = useParams();
 
-    let [state, setState] = useState({
+    const [state, setState] = useState({
         loading: false,
         contact: {},
         errorMessage: ''
@@ -14,20 +14,20 @@ let ViewContact = () => {
 
     useEffect(() => {
         const fetchContact = async () => {
-            setState({ ...state, loading: true });
+            setState(prevState => ({ ...prevState, loading: true }));
             try {
                 let response = await ContactService.getContact(contactId);
-                setState({
-                    ...state,
+                setState(prevState => ({
+                    ...prevState,
                     loading: false,
                     contact: response.data
-                });
+                }));
             } catch (error) {
-                setState({
-                    ...state,
+                setState(prevState => ({
+                    ...prevState,
                     loading: false,
                     errorMessage: 'Failed to fetch contact'
-                });
+                }));
                 console.error("Failed to fetch contact", error);
             }
         };
@@ -35,7 +35,8 @@ let ViewContact = () => {
         fetchContact();
     }, [contactId]);
 
-    let { loading, contact} = state;
+    let { loading, contact } = state;
+
     return (
         <React.Fragment>
             <section className="view-contact-intro p-3">
